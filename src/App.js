@@ -27,13 +27,34 @@ class App extends React.Component {
         }); 
     //initialize datatable
     $(document).ready(function () {
-        $('#example').DataTable();
+      var table = $('#example').DataTable( {
+        orderCellsTop: true,
+        fixedHeader: true
+    } );
+    $('#example thead tr').clone(true).appendTo( '#example thead' );
+    $('#example thead tr:eq(1) th').each( function (i) {
+      
+        var title = $(this).text();
+       
+        $(this).html( '<input type="text" placeholder="Search '+title+'" />' );
+ 
+        $( 'input', this ).on( 'keyup change', function () {
+            if ( table.column(i).search() !== this.value ) {
+                table
+                    .column(i)
+                    .search( this.value )
+                    .draw();
+            }
+        } );
+    } );
+ 
+    
     });
  }
   render(){
     //Datatable HTML
   return (
-  
+  <div>
     <div className="MainDiv">
         <h1 align="center">Ukazdal Json DataTable</h1>
     <h3 align="center">Country Capital Flag Database</h3>
@@ -61,12 +82,11 @@ class App extends React.Component {
              
             )
           })}
-           
-            
           </tbody>
         </table>
           
         </div>
+      </div>
       </div>
   );
 }
